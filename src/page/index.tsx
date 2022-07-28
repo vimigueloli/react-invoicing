@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { numberMask } from "components/masks";
 import ProductsDescription from "components/ProductsDescription";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import * as S from "./GlobalStyles";
 
@@ -11,6 +11,7 @@ export default function App() {
     const [invoiceId, setInvoiceId] = useState(10);
     const [printMode, setPrintMode] = useState(false);
     const [selected, setSelected] = useState(5);
+    const [currency, setCurrency] = useState("$");
     const [costumerInfo, setCostumerInfo] = useState({
         name: "Mr. John Doe",
         web_link: "John Doe Designs Inc.",
@@ -279,12 +280,13 @@ export default function App() {
                             <select
                                 ng-model="currencySymbol"
                                 ng-options="currency.symbol as currency.name for currency in availableCurrencies"
+                                onChange={(e) => setCurrency(e.target.value)}
                             >
                                 {currencyOptions.map((item, idx) => (
                                     <option
                                         key={idx}
                                         selected={selected === idx}
-                                        onClick={() => setSelected(idx)}
+                                        value={item.symbol}
                                     >
                                         {item.name}
                                     </option>
@@ -294,10 +296,7 @@ export default function App() {
                     </S.Line>
                 )}
                 <S.Separator />
-                <ProductsDescription
-                    print={printMode}
-                    currency={currencyOptions[selected].symbol}
-                />
+                <ProductsDescription print={printMode} currency={currency} />
 
                 <S.Line height="2.6em" justify="start">
                     {printMode && (
