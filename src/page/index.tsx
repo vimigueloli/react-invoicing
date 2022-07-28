@@ -1,30 +1,85 @@
-import React, { useState } from "react";
+/* eslint-disable jsx-a11y/img-redundant-alt */
+import { numberMask } from "components/masks";
+import ProductsDescription from "components/ProductsDescription";
+import { useState } from "react";
 import "./App.css";
+import * as S from "./GlobalStyles";
 
 export default function App() {
     const logo = require("assets/logo.png");
     const [logoRemoved, setLogoRemoved] = useState(false);
-    const [currencySymbol, setCurrencySymbol] = useState("$");
+    const [invoiceId, setInvoiceId] = useState(10);
+    const [printMode, setPrintMode] = useState(false);
+    const [selected, setSelected] = useState(5);
+    const [costumerInfo, setCostumerInfo] = useState({
+        name: "Mr. John Doe",
+        web_link: "John Doe Designs Inc.",
+        address1: "1 Infinite Loop",
+        address2: "Cupertino, California, US",
+        postal: "90210",
+    });
+    const [companyInfo, setCompanyInfo] = useState({
+        name: "Mr. John Doe",
+        web_link: "John Doe Designs Inc.",
+        address1: "1 Infinite Loop",
+        address2: "Cupertino, California, US",
+        postal: "90210",
+    });
+
+    // ? currency types
+    const currencyOptions = [
+        {
+            name: "British Pound (£)",
+            symbol: "£",
+        },
+        {
+            name: "Canadian Dollar ($)",
+            symbol: "CAD $ ",
+        },
+        {
+            name: "Euro (€)",
+            symbol: "€",
+        },
+        {
+            name: "Indian Rupee (₹)",
+            symbol: "₹",
+        },
+        {
+            name: "Norwegian krone (kr)",
+            symbol: "kr ",
+        },
+        {
+            name: "US Dollar ($)",
+            symbol: "$",
+        },
+    ];
 
     return (
-        <>
+        <S.Centered>
             <div className="container" style={{ width: "800px" }} id="invoice">
-                <div className="row">
-                    <div className="col-xs-12 heading">INVOICE</div>
-                </div>
-                <div className="row branding">
-                    <div className="col-xs-6">
-                        <div className="invoice-number-container">
-                            <label>Invoice #</label>
-                            <input
-                                type="text"
-                                id="invoice-number"
-                                ng-model="invoice.invoice_number"
-                            />
-                        </div>
-                    </div>
+                <S.Line color="#357EBD" bottom="1em" height="2.2em">
+                    <S.Text color="#fff">INVOICE</S.Text>
+                </S.Line>
+                <S.Line
+                    justify="space-between"
+                    align="flex-start"
+                    left="1em"
+                    right="1em"
+                    bottom="2em"
+                >
+                    <S.Text weight="bold" color="#313233">
+                        <label>Invoice #</label>
+                        <S.Input
+                            weight="bold"
+                            type="text"
+                            value={invoiceId}
+                            onChange={(e) =>
+                                setInvoiceId(Number(numberMask(e.target.value)))
+                            }
+                        />
+                    </S.Text>
                     <div className="col-xs-6 logo-container">
-                        <input type="file" id="imgInp" />
+                        <S.Input type="file" id="imgInp" />
                         {!logoRemoved && (
                             <img
                                 id="company_logo"
@@ -33,204 +88,232 @@ export default function App() {
                                 src={logo}
                             />
                         )}
-                        <div>
-                            <div className="noPrint" ng-hide="printMode">
-                                <a ng-click="editLogo()">Edit Logo</a>
-                                <a ng-click="toggleLogo()" id="remove_logo">
-                                    {logoRemoved ? "Show" : "Hide"} logo
-                                </a>
-                            </div>
-                        </div>
+                        <S.Line justify="flex-end">
+                            {!printMode && (
+                                <>
+                                    <S.ClickableText
+                                        ng-click="editLogo()"
+                                        right="4px"
+                                    >
+                                        Edit Logo
+                                    </S.ClickableText>
+                                    <S.ClickableText
+                                        onClick={() =>
+                                            setLogoRemoved(!logoRemoved)
+                                        }
+                                        id="remove_logo"
+                                    >
+                                        {logoRemoved ? "Show" : "Hide"} logo
+                                    </S.ClickableText>
+                                </>
+                            )}
+                        </S.Line>
                     </div>
-                </div>
-                <div className="row infos">
-                    <div className="col-xs-6">
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.customer_info.name"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.customer_info.web_link"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.customer_info.address1"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.customer_info.address2"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.customer_info.postal"
-                            />
-                        </div>
-                        <div
-                            className="input-container"
-                            data-ng-hide="printMode"
-                        >
+                </S.Line>
+                <S.Separator />
+                <S.Line
+                    justify="space-between"
+                    top="2px"
+                    align="flex-start"
+                    bottom="2px"
+                    left="1em"
+                    right="1em"
+                    //  "row infos"
+                >
+                    <div>
+                        {
+                            // * client info
+                            <>
+                                <S.Line align="start" top="2px" bottom="2px">
+                                    <S.Input
+                                        width="300px"
+                                        type="text"
+                                        value={costumerInfo.name}
+                                        onChange={(e) => {
+                                            setCostumerInfo({
+                                                ...costumerInfo,
+                                                name: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="start" top="2px" bottom="2px">
+                                    <S.Input
+                                        width="300px"
+                                        type="text"
+                                        value={costumerInfo.web_link}
+                                        onChange={(e) => {
+                                            setCostumerInfo({
+                                                ...costumerInfo,
+                                                web_link: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="start" top="2px" bottom="2px">
+                                    <S.Input
+                                        width="300px"
+                                        type="text"
+                                        ng-model="invoice.customer_info.address1"
+                                        value={costumerInfo.address1}
+                                        onChange={(e) => {
+                                            setCostumerInfo({
+                                                ...costumerInfo,
+                                                address1: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="start" top="2px" bottom="2px">
+                                    <S.Input
+                                        width="300px"
+                                        type="text"
+                                        value={costumerInfo.address2}
+                                        onChange={(e) => {
+                                            setCostumerInfo({
+                                                ...costumerInfo,
+                                                address2: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="start" top="2px" bottom="2px">
+                                    <S.Input
+                                        width="300px"
+                                        type="text"
+                                        ng-model="invoice.customer_info.postal"
+                                        value={costumerInfo.postal}
+                                        onChange={(e) => {
+                                            setCostumerInfo({
+                                                ...costumerInfo,
+                                                postal: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                            </>
+                        }
+                    </div>
+                    <div>
+                        {
+                            // * store info
+                            <>
+                                <S.Line align="end" top="2px" bottom="2px">
+                                    <S.Input
+                                        align="right"
+                                        width="300px"
+                                        type="text"
+                                        ng-model="invoice.company_info.name"
+                                        value={companyInfo.name}
+                                        onChange={(e) => {
+                                            setCompanyInfo({
+                                                ...companyInfo,
+                                                name: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="end" top="2px" bottom="2px">
+                                    <S.Input
+                                        align="right"
+                                        width="300px"
+                                        type="text"
+                                        value={companyInfo.web_link}
+                                        onChange={(e) => {
+                                            setCompanyInfo({
+                                                ...companyInfo,
+                                                web_link: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="end" top="2px" bottom="2px">
+                                    <S.Input
+                                        align="right"
+                                        width="300px"
+                                        type="text"
+                                        value={companyInfo.address1}
+                                        onChange={(e) => {
+                                            setCompanyInfo({
+                                                ...companyInfo,
+                                                address1: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="end" top="2px" bottom="2px">
+                                    <S.Input
+                                        align="right"
+                                        width="300px"
+                                        type="text"
+                                        value={companyInfo.address2}
+                                        onChange={(e) => {
+                                            setCompanyInfo({
+                                                ...companyInfo,
+                                                address2: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                                <S.Line align="end" top="2px" bottom="2px">
+                                    <S.Input
+                                        align="right"
+                                        width="300px"
+                                        type="text"
+                                        value={companyInfo.postal}
+                                        onChange={(e) => {
+                                            setCompanyInfo({
+                                                ...companyInfo,
+                                                postal: e.target.value,
+                                            });
+                                        }}
+                                    />
+                                </S.Line>
+                            </>
+                        }
+                    </div>
+                </S.Line>
+                {!printMode && (
+                    <S.Line align="end" bottom="2px">
+                        <div>
                             <select
                                 ng-model="currencySymbol"
                                 ng-options="currency.symbol as currency.name for currency in availableCurrencies"
-                            ></select>
-                        </div>
-                    </div>
-                    <div className="col-xs-6 right">
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.company_info.name"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.company_info.web_link"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.company_info.address1"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.company_info.address2"
-                            />
-                        </div>
-                        <div className="input-container">
-                            <input
-                                type="text"
-                                ng-model="invoice.company_info.postal"
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="items-table">
-                    <div className="row header">
-                        <div className="col-xs-1">&nbsp;</div>
-                        <div className="col-xs-5">Description</div>
-                        <div className="col-xs-2">Quantity</div>
-                        <div className="col-xs-2">Cost {currencySymbol}</div>
-                        <div className="col-xs-2 text-right">Total</div>
-                    </div>
-                    <div
-                        className="row invoice-item"
-                        ng-repeat="item in invoice.items"
-                        ng-animate="'slide-down'"
-                    >
-                        <div className="col-xs-1 remove-item-container">
-                            <a
-                                ng-hide="printMode"
-                                ng-click="removeItem(item)"
-                                className="btn btn-danger"
                             >
-                                [X]
-                            </a>
+                                {currencyOptions.map((item, idx) => (
+                                    <option
+                                        key={idx}
+                                        selected={selected === idx}
+                                        onClick={() => setSelected(idx)}
+                                    >
+                                        {item.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
-                        <div className="col-xs-5 input-container">
-                            <input
-                                ng-model="item.description"
-                                placeholder="Description"
-                            />
-                        </div>
-                        <div className="col-xs-2 input-container">
-                            <input
-                                ng-model="item.qty"
-                                value="1"
-                                ng-required
-                                ng-validate="integer"
-                                placeholder="Quantity"
-                            />
-                        </div>
-                        <div className="col-xs-2 input-container">
-                            <input
-                                ng-model="item.cost"
-                                value="0.00"
-                                ng-required
-                                ng-validate="number"
-                                placeholder="Cost"
-                            />
-                        </div>
-                        <div className="col-xs-2 text-right input-container">
-                            {156.0}
-                        </div>
-                    </div>
-                    <div className="row invoice-item">
-                        <div
-                            className="col-xs-12 add-item-container"
-                            ng-hide="printMode"
-                        >
-                            <a className="btn btn-primary" ng-click="addItem()">
-                                [+]
-                            </a>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-xs-10 text-right">Sub Total</div>
-                        <div className="col-xs-2 text-right">{10}</div>
-                    </div>
-                    <div className="row">
-                        <div className="col-xs-10 text-right">
-                            Tax(%):{" "}
-                            <input
-                                ng-model="invoice.tax"
-                                ng-validate="number"
-                                style={{ width: "43px" }}
-                            />
-                        </div>
-                        <div className="col-xs-2 text-right">{15}</div>
-                    </div>
-                    <div className="row">
-                        <div className="col-xs-10 text-right">Grand Total:</div>
-                        <div className="col-xs-2 text-right">{15}</div>
-                    </div>
-                </div>
-                <div className="row noPrint actions">
-                    <a
-                        href="#"
-                        className="btn btn-primary"
-                        ng-show="printMode"
-                        ng-click="printInfo()"
-                    >
-                        Print
-                    </a>
-                    <a
-                        href="#"
-                        className="btn btn-primary"
-                        ng-click="clearLocalStorage()"
-                    >
-                        Reset
-                    </a>
-                    <a
-                        href="#"
-                        className="btn btn-primary"
-                        ng-hide="printMode"
-                        ng-click="printMode = true;"
-                    >
-                        Turn On Print Mode
-                    </a>
-                    <a
-                        href="#"
-                        className="btn btn-primary"
-                        ng-show="printMode"
-                        ng-click="printMode = false;"
-                    >
-                        Turn Off Print Mode
-                    </a>
-                </div>
+                    </S.Line>
+                )}
+                <S.Separator />
+                <ProductsDescription
+                    print={printMode}
+                    currency={currencyOptions[selected].symbol}
+                />
+
+                <S.Line height="2.6em" justify="start">
+                    {printMode && (
+                        <S.Line right="2px">
+                            <S.Button>Print</S.Button>
+                        </S.Line>
+                    )}
+                    <S.Line right="2px">
+                        <S.Button>Reset</S.Button>
+                    </S.Line>
+                    <S.Line right="2px">
+                        <S.Button onClick={() => setPrintMode(!printMode)}>
+                            Turn{printMode ? "Off" : "On"} PrintMode
+                        </S.Button>
+                    </S.Line>
+                </S.Line>
             </div>
 
             <div ng-hide="printMode" className="copy noPrint">
@@ -245,6 +328,6 @@ export default function App() {
                     Metaware Labs Inc.
                 </a>
             </div>
-        </>
+        </S.Centered>
     );
 }
