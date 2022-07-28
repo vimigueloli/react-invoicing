@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
+import ImageInput from "components/ImageInput";
 import { numberMask } from "components/masks";
 import ProductsDescription from "components/ProductsDescription";
 import { useEffect, useState } from "react";
@@ -12,6 +13,7 @@ export default function App() {
     const [printMode, setPrintMode] = useState(false);
     const [selected, setSelected] = useState(5);
     const [currency, setCurrency] = useState("$");
+    const [Image, setImage] = useState<any>(null);
     const [costumerInfo, setCostumerInfo] = useState({
         name: "Mr. John Doe",
         web_link: "John Doe Designs Inc.",
@@ -86,7 +88,11 @@ export default function App() {
                                 id="company_logo"
                                 alt="your image"
                                 width="300"
-                                src={logo}
+                                src={
+                                    Image !== null
+                                        ? URL.createObjectURL(Image)
+                                        : logo
+                                }
                             />
                         )}
                         <S.Line justify="flex-end">
@@ -96,7 +102,9 @@ export default function App() {
                                         ng-click="editLogo()"
                                         right="4px"
                                     >
-                                        Edit Logo
+                                        <ImageInput setPicture={setImage}>
+                                            Eedit Logo
+                                        </ImageInput>
                                     </S.ClickableText>
                                     <S.ClickableText
                                         onClick={() =>
@@ -275,11 +283,9 @@ export default function App() {
                     </div>
                 </S.Line>
                 {!printMode && (
-                    <S.Line align="end" bottom="2px">
+                    <div>
                         <div>
-                            <select
-                                ng-model="currencySymbol"
-                                ng-options="currency.symbol as currency.name for currency in availableCurrencies"
+                            <S.Select
                                 onChange={(e) => setCurrency(e.target.value)}
                             >
                                 {currencyOptions.map((item, idx) => (
@@ -291,9 +297,9 @@ export default function App() {
                                         {item.name}
                                     </option>
                                 ))}
-                            </select>
+                            </S.Select>
                         </div>
-                    </S.Line>
+                    </div>
                 )}
                 <S.Separator />
                 <ProductsDescription print={printMode} currency={currency} />

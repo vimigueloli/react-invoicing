@@ -54,6 +54,12 @@ export const Separator = styled.div`
   border-bottom: solid 1px #e7e7e7;
 `;
 
+export const Select = styled.select`
+  margin-left: 1.3em;
+  margin-top: 2px;
+  margin-bottom: 3px;
+`;
+
 interface TextProps{
   color?: string;
   size?: string;
