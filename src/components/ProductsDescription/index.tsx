@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as S from "./styles";
 
 interface DescriptionProps {
@@ -11,9 +11,26 @@ export default function ProductsDescription({
     print,
 }: DescriptionProps) {
     const [items, setItems] = useState<any[]>([
-        { qty: 10, description: "Gadget", cost: 9.95 },
+        { qty: 10, description: "Gadget", discount: 0, cost: 9.95 },
     ]);
+    const [totalList, setTotalList] = useState<number[]>([]);
     const [tax, setTax] = useState<any>(13);
+
+    useEffect(() => {
+        const output: any[] = [];
+        items.forEach((item) => {
+            output.push(
+                item.qty * item.cost -
+                    (item.qty * item.cost * item.discount) / 100
+            );
+            console.log(
+                "output",
+                item.qty * item.cost -
+                    (item.qty * item.cost * item.discount) / 100
+            );
+        });
+        setTotalList(output);
+    }, [items]);
 
     return (
         <S.Table style={{ width: "100%" }}>
@@ -26,7 +43,11 @@ export default function ProductsDescription({
                             Description
                         </S.Text>
                     </S.Td>
-                    <S.Td />
+                    <S.Td>
+                        <S.Text weight="bold" color="#313233">
+                            Discount
+                        </S.Text>
+                    </S.Td>
                     <S.Td>
                         <S.Text weight="bold" color="#313233">
                             Quantity
@@ -83,7 +104,31 @@ export default function ProductsDescription({
                                 }
                             />
                         </S.Td>
-                        <S.Td />
+                        <S.Td>
+                            <S.Line justify="start">
+                                <S.NumberInput
+                                    width="60px"
+                                    decimalSeparator="."
+                                    defaultValue={0}
+                                    value={item.discount}
+                                    onValueChange={(value, name) =>
+                                        setItems(
+                                            items.map((i) =>
+                                                i === item
+                                                    ? {
+                                                          ...i,
+                                                          discount: value
+                                                              ? value
+                                                              : 0,
+                                                      }
+                                                    : i
+                                            )
+                                        )
+                                    }
+                                />
+                                <S.Text>%</S.Text>
+                            </S.Line>
+                        </S.Td>
                         <S.Td>
                             <S.NumberInput
                                 width="80px"
@@ -127,7 +172,10 @@ export default function ProductsDescription({
                         <S.Td right>
                             <S.Text align="right" size="14px">
                                 {currency}
-                                {(item.qty * item.cost).toFixed(2)}
+                                {(
+                                    item.qty * item.cost -
+                                    (item.qty * item.cost * item.discount) / 100
+                                ).toFixed(2)}
                             </S.Text>
                         </S.Td>
                     </S.Tr>
@@ -140,7 +188,12 @@ export default function ProductsDescription({
                             onClick={() =>
                                 setItems([
                                     ...items,
-                                    { qty: 0, description: "", cost: 0 },
+                                    {
+                                        qty: 0,
+                                        description: "",
+                                        discount: 0,
+                                        cost: 0,
+                                    },
                                 ])
                             }
                         >
@@ -162,11 +215,8 @@ export default function ProductsDescription({
                 <S.Td right>
                     <S.Text align="right">
                         {currency}
-                        {items
-                            .reduce(
-                                (acc, item) => acc + item.qty * item.cost,
-                                0
-                            )
+                        {totalList
+                            .reduce((acc, item) => acc + item, 0)
                             .toFixed(2)}
                     </S.Text>
                 </S.Td>
@@ -195,10 +245,7 @@ export default function ProductsDescription({
                     <S.Text align="right">
                         {currency}
                         {(
-                            items.reduce(
-                                (acc, item) => acc + item.qty * item.cost,
-                                0
-                            ) *
+                            totalList.reduce((acc, item) => acc + item, 0) *
                             (tax / 100)
                         ).toFixed(2)}
                     </S.Text>
@@ -217,15 +264,9 @@ export default function ProductsDescription({
                 <S.Td right>
                     <S.Text align="right">
                         {(
-                            items.reduce(
-                                (acc, item) => acc + item.qty * item.cost,
-                                0
-                            ) *
+                            totalList.reduce((acc, item) => acc + item, 0) *
                                 (tax / 100) +
-                            items.reduce(
-                                (acc, item) => acc + item.qty * item.cost,
-                                0
-                            )
+                            totalList.reduce((acc, item) => acc + item, 0)
                         ).toFixed(2)}
                     </S.Text>
                 </S.Td>
