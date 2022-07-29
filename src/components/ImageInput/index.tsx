@@ -8,6 +8,7 @@ interface ImageInputProps {
 export default function ImageInput({ children, setPicture }: ImageInputProps) {
     const inputFile = useRef(null);
 
+    //? redirect the click event to the file input
     function handleClick() {
         //@ts-ignore
         inputFile.current.click();
@@ -25,7 +26,7 @@ export default function ImageInput({ children, setPicture }: ImageInputProps) {
                     setPicture(e.target.files[0]);
                 }}
             />
-            <div onClick={handleClick}>Edit Logo</div>
+            <div onClick={handleClick}>{children}</div>
         </div>
     );
 }

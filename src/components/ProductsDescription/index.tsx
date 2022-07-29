@@ -1,32 +1,47 @@
 import { useEffect, useState } from "react";
 import * as S from "./styles";
+import * as G from "globalStyles";
 
 interface DescriptionProps {
     currency: string;
     print: boolean;
 }
 
+interface Product {
+    qty: number | string;
+    description: string;
+    discount: number | string;
+    cost: number | string;
+}
+
 export default function ProductsDescription({
     currency,
     print,
 }: DescriptionProps) {
-    const [items, setItems] = useState<any[]>([
+    const [totalList, setTotalList] = useState<number[]>([]);
+    const [tax, setTax] = useState<number | string>(13);
+    const [items, setItems] = useState<Product[]>([
         { qty: 10, description: "Gadget", discount: 0, cost: 9.95 },
     ]);
-    const [totalList, setTotalList] = useState<number[]>([]);
-    const [tax, setTax] = useState<any>(13);
 
+    // ? calculate the total of each item and save it
     useEffect(() => {
         const output: any[] = [];
         items.forEach((item) => {
             output.push(
-                item.qty * item.cost -
-                    (item.qty * item.cost * item.discount) / 100
+                Number(item.qty) * Number(item.cost) -
+                    (Number(item.qty) *
+                        Number(item.cost) *
+                        Number(item.discount)) /
+                        100
             );
             console.log(
                 "output",
-                item.qty * item.cost -
-                    (item.qty * item.cost * item.discount) / 100
+                Number(item.qty) * Number(item.cost) -
+                    (Number(item.qty) *
+                        Number(item.cost) *
+                        Number(item.discount)) /
+                        100
             );
         });
         setTotalList(output);
@@ -39,29 +54,29 @@ export default function ProductsDescription({
                 <S.Tr>
                     <S.Td left />
                     <S.Td>
-                        <S.Text weight="bold" color="#313233">
+                        <G.Text weight="bold" color="#313233">
                             Description
-                        </S.Text>
+                        </G.Text>
                     </S.Td>
                     <S.Td>
-                        <S.Text weight="bold" color="#313233">
-                            Discount
-                        </S.Text>
+                        <G.Text weight="bold" color="#313233">
+                            Discount(%)
+                        </G.Text>
                     </S.Td>
                     <S.Td>
-                        <S.Text weight="bold" color="#313233">
+                        <G.Text weight="bold" color="#313233">
                             Quantity
-                        </S.Text>
+                        </G.Text>
                     </S.Td>
                     <S.Td>
-                        <S.Text weight="bold" color="#313233">
+                        <G.Text weight="bold" color="#313233">
                             Cost {currency}
-                        </S.Text>
+                        </G.Text>
                     </S.Td>
                     <S.Td right>
-                        <S.Text align="right" color="#313233" weight="bold">
+                        <G.Text align="right" color="#313233" weight="bold">
                             Total
-                        </S.Text>
+                        </G.Text>
                     </S.Td>
                 </S.Tr>
             }
@@ -71,7 +86,7 @@ export default function ProductsDescription({
                     <S.Tr dark={idx % 2 === 0}>
                         <S.Td left>
                             {!print ? (
-                                <S.Button
+                                <G.Button
                                     red
                                     onClick={() => {
                                         setItems(
@@ -80,13 +95,13 @@ export default function ProductsDescription({
                                     }}
                                 >
                                     [X]
-                                </S.Button>
+                                </G.Button>
                             ) : (
-                                <S.Line width="50px" />
+                                <G.Line width="50px" />
                             )}
                         </S.Td>
                         <S.Td>
-                            <S.Input
+                            <G.Input
                                 placeholder="Description"
                                 value={item.description}
                                 onChange={(e) =>
@@ -105,7 +120,7 @@ export default function ProductsDescription({
                             />
                         </S.Td>
                         <S.Td>
-                            <S.Line justify="start">
+                            <G.Line justify="start">
                                 <S.NumberInput
                                     width="60px"
                                     decimalSeparator="."
@@ -126,8 +141,7 @@ export default function ProductsDescription({
                                         )
                                     }
                                 />
-                                <S.Text>%</S.Text>
-                            </S.Line>
+                            </G.Line>
                         </S.Td>
                         <S.Td>
                             <S.NumberInput
@@ -170,107 +184,122 @@ export default function ProductsDescription({
                             />
                         </S.Td>
                         <S.Td right>
-                            <S.Text align="right" size="14px">
+                            <G.Text align="right" size="14px">
                                 {currency}
                                 {(
-                                    item.qty * item.cost -
-                                    (item.qty * item.cost * item.discount) / 100
+                                    Number(item.qty) * Number(item.cost) -
+                                    (Number(item.qty) *
+                                        Number(item.cost) *
+                                        Number(item.discount)) /
+                                        100
                                 ).toFixed(2)}
-                            </S.Text>
+                            </G.Text>
                         </S.Td>
                     </S.Tr>
                 ))
             }
-            {!print && (
-                <S.Tr dark={items.length % 2 === 0}>
-                    <S.Td left>
-                        <S.Button
-                            onClick={() =>
-                                setItems([
-                                    ...items,
-                                    {
-                                        qty: 0,
-                                        description: "",
-                                        discount: 0,
-                                        cost: 0,
-                                    },
-                                ])
-                            }
-                        >
-                            [+]
-                        </S.Button>
+            {
+                // * add item row
+                !print && (
+                    <S.Tr dark={items.length % 2 === 0}>
+                        <S.Td left>
+                            <G.Button
+                                onClick={() =>
+                                    setItems([
+                                        ...items,
+                                        {
+                                            qty: 0,
+                                            description: "",
+                                            discount: 0,
+                                            cost: 0,
+                                        },
+                                    ])
+                                }
+                            >
+                                [+]
+                            </G.Button>
+                        </S.Td>
+                    </S.Tr>
+                )
+            }
+            {
+                // * subtotal row
+                <S.Tr dark={(items.length + 1) % 2 === 0}>
+                    <S.Td left />
+                    <S.Td />
+                    <S.Td />
+                    <S.Td />
+                    <S.Td>
+                        <G.Line width="100px" justify="end">
+                            Sub Total
+                        </G.Line>
+                    </S.Td>
+                    <S.Td right>
+                        <G.Text align="right">
+                            {currency}
+                            {totalList
+                                .reduce((acc, item) => acc + item, 0)
+                                .toFixed(2)}
+                        </G.Text>
                     </S.Td>
                 </S.Tr>
-            )}
-            <S.Tr dark={(items.length + 1) % 2 === 0}>
-                <S.Td left />
-                <S.Td />
-                <S.Td />
-                <S.Td />
-                <S.Td>
-                    <S.Line width="100px" justify="end">
-                        Sub Total
-                    </S.Line>
-                </S.Td>
-                <S.Td right>
-                    <S.Text align="right">
-                        {currency}
-                        {totalList
-                            .reduce((acc, item) => acc + item, 0)
-                            .toFixed(2)}
-                    </S.Text>
-                </S.Td>
-            </S.Tr>
-            <S.Tr dark={(items.length + 2) % 2 === 0}>
-                <S.Td left />
-                <S.Td />
-                <S.Td />
-                <S.Td />
-                <S.Td>
-                    <S.Line width="100px" justify="end">
-                        <S.Text>Tax(%):</S.Text>
-                        <S.NumberInput
-                            defaultValue={0}
-                            width="40px"
-                            value={tax}
-                            decimalSeparator="."
-                            decimalsLimit={2}
-                            onValueChange={(value, name) =>
-                                setTax(value ? value : 0)
-                            }
-                        />
-                    </S.Line>
-                </S.Td>
-                <S.Td right>
-                    <S.Text align="right">
-                        {currency}
-                        {(
-                            totalList.reduce((acc, item) => acc + item, 0) *
-                            (tax / 100)
-                        ).toFixed(2)}
-                    </S.Text>
-                </S.Td>
-            </S.Tr>
-            <S.Tr dark={(items.length + 3) % 2 === 0}>
-                <S.Td left />
-                <S.Td />
-                <S.Td />
-                <S.Td />
-                <S.Td>
-                    <S.Text width="100px" align="right">
-                        Grand Total
-                    </S.Text>
-                </S.Td>
-                <S.Td right>
-                    <S.Text align="right">
-                        {(
-                            totalList.reduce((acc, item) => acc + item, 0) *
-                                (tax / 100) +
-                            totalList.reduce((acc, item) => acc + item, 0)
-                        ).toFixed(2)}
-                    </S.Text>
-                </S.Td>
-            </S.Tr>
+            }
+            {
+                // * tax row
+                <S.Tr dark={(items.length + 2) % 2 === 0}>
+                    <S.Td left />
+                    <S.Td />
+                    <S.Td />
+                    <S.Td />
+                    <S.Td>
+                        <G.Line width="100px" justify="end">
+                            <G.Text>Tax(%):</G.Text>
+                            <S.NumberInput
+                                defaultValue={0}
+                                width="40px"
+                                value={tax}
+                                decimalSeparator="."
+                                decimalsLimit={2}
+                                onValueChange={(value, name) =>
+                                    setTax(value ? value : 0)
+                                }
+                            />
+                        </G.Line>
+                    </S.Td>
+                    <S.Td right>
+                        <G.Text align="right">
+                            {currency}
+                            {(
+                                totalList.reduce((acc, item) => acc + item, 0) *
+                                (Number(tax) / 100)
+                            ).toFixed(2)}
+                        </G.Text>
+                    </S.Td>
+                </S.Tr>
+            }
+            {
+                // * grandtotal row
+                <S.Tr dark={(items.length + 3) % 2 === 0}>
+                    <S.Td left />
+                    <S.Td />
+                    <S.Td />
+                    <S.Td />
+                    <S.Td>
+                        <G.Text width="100px" align="right">
+                            Grand Total
+                        </G.Text>
+                    </S.Td>
+                    <S.Td right>
+                        <G.Text align="right">
+                            {(
+                                totalList.reduce((acc, item) => acc + item, 0) *
+                                    (Number(tax) / 100) +
+                                totalList.reduce((acc, item) => acc + item, 0)
+                            ).toFixed(2)}
+                        </G.Text>
+                    </S.Td>
+                </S.Tr>
+            }
         </S.Table>
     );
 }

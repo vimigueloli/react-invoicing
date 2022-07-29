@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./reset.css";
+import "./globalStyles/reset.css";
 import App from "page";
 
 const root = ReactDOM.createRoot(
