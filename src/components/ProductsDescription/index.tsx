@@ -7,20 +7,14 @@ interface DescriptionProps {
     print: boolean;
 }
 
-interface ProductProps {
-    qty: number;
-    description: string;
-    cost: number;
-}
-
 export default function ProductsDescription({
     currency,
     print,
 }: DescriptionProps) {
-    const [items, setItems] = useState<ProductProps[]>([
+    const [items, setItems] = useState<any[]>([
         { qty: 10, description: "Gadget", cost: 9.95 },
     ]);
-    const [tax, setTax] = useState(13);
+    const [tax, setTax] = useState<any>(13);
 
     return (
         <S.Table style={{ width: "100%" }}>
@@ -92,20 +86,18 @@ export default function ProductsDescription({
                         </S.Td>
                         <S.Td />
                         <S.Td>
-                            <S.Input
+                            <S.NumberInput
                                 width="80px"
                                 value={item.qty}
-                                onChange={(e) =>
+                                decimalSeparator="."
+                                defaultValue={0}
+                                onValueChange={(value, name) =>
                                     setItems(
                                         items.map((i) =>
                                             i === item
                                                 ? {
                                                       ...i,
-                                                      qty: Number(
-                                                          numberMask(
-                                                              e.target.value
-                                                          )
-                                                      ),
+                                                      qty: value ? value : 0,
                                                   }
                                                 : i
                                         )
@@ -114,20 +106,18 @@ export default function ProductsDescription({
                             />
                         </S.Td>
                         <S.Td>
-                            <S.Input
+                            <S.NumberInput
                                 width="80px"
                                 value={item.cost}
-                                onChange={(e) =>
+                                defaultValue={0}
+                                decimalSeparator="."
+                                onValueChange={(value, name) =>
                                     setItems(
                                         items.map((i) =>
                                             i === item
                                                 ? {
                                                       ...i,
-                                                      cost: Number(
-                                                          numberMask(
-                                                              e.target.value
-                                                          )
-                                                      ),
+                                                      cost: value ? value : 0,
                                                   }
                                                 : i
                                         )
@@ -138,7 +128,7 @@ export default function ProductsDescription({
                         <S.Td right>
                             <S.Text align="right" size="14px">
                                 {currency}
-                                {item.qty * item.cost}
+                                {(item.qty * item.cost).toFixed(2)}
                             </S.Text>
                         </S.Td>
                     </S.Tr>
@@ -190,10 +180,15 @@ export default function ProductsDescription({
                 <S.Td>
                     <S.Line width="100px" justify="end">
                         <S.Text>Tax(%):</S.Text>
-                        <S.Input
+                        <S.NumberInput
+                            defaultValue={0}
                             width="40px"
                             value={tax}
-                            onChange={(e) => setTax(Number(e.target.value))}
+                            decimalSeparator="."
+                            decimalsLimit={2}
+                            onValueChange={(value, name) =>
+                                setTax(value ? value : 0)
+                            }
                         />
                     </S.Line>
                 </S.Td>

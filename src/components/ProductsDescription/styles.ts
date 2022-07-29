@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import CurrencyInput from 'react-currency-input-field';
 
 export const Centered = styled.div`
   margin-right: auto;
@@ -77,6 +78,19 @@ interface InputProps{
     align?: string;
 }
 
+export const NumberInput = styled(CurrencyInput)<InputProps>`
+    font-weight: ${props=> props.weight || 'normal'};
+    border: 1px solid #FFF;
+    padding: 4px;
+    width: ${props=> props.width || 'auto'};
+    text-align: ${props=> props.align || 'left'};
+    :hover{
+        border: 1px solid #CCC;
+    }
+    :focus{
+        border: 1px solid #CCC;
+    }
+`;
 export const Input = styled.input<InputProps>`
     font-weight: ${props=> props.weight || 'normal'};
     border: 1px solid #FFF;
