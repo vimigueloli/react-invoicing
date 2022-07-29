@@ -1,5 +1,4 @@
-import { numberMask } from "components/masks";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import * as S from "./styles";
 
 interface DescriptionProps {

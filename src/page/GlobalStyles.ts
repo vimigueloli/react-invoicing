@@ -10,6 +10,12 @@ export const Centered = styled.div`
   justify-content: center;
   flex-direction: column;
   overflow-clip-box: inherit;
+  @media print{
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 `;
 
 interface LineProps {
@@ -23,6 +29,7 @@ interface LineProps {
   justify?: string;
   align?: string;
   grid?: number;
+  noPrint?: boolean;
 }
 
 function autoCompleter(input:number){
@@ -47,6 +54,7 @@ export const Line = styled.div<LineProps>`
   padding-right: ${props=> props.right || '0'};
   ${props => props.grid && `grid-template-columns: ${autoCompleter(props.grid)}`};
   ${props => props.grid && `grid-template-rows: auto`};
+  ${props => props.noPrint && `@media print { display: none; }`};
 `;
 
 export const Separator = styled.div`
@@ -98,7 +106,7 @@ interface ClickableProps{
   size?: string;
 }
 
-export const ClickableText = styled.div<ClickableProps>`
+export const ClickableText = styled.span<ClickableProps>`
   cursor: pointer;
   color: #1f75c0;
   padding-left: ${props=> props.left || '0'};
