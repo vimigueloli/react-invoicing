@@ -9,21 +9,24 @@
 # Project's main dependencies
 
 ![GitHub](https://img.shields.io/badge/Dependencies-React-4e8dec?style=plastic)
-![GitHub](https://img.shields.io/badge/-React_currency_input_field-4e8dec?style=plastic)
-![GitHub](https://img.shields.io/badge/-Styled_components-4e8dec?style=plastic)
+![GitHub](https://img.shields.io/badge/-seact_currency_input_field-4e8dec?style=plastic)
+![GitHub](https://img.shields.io/badge/-styled_components-4e8dec?style=plastic)
 
 <br/>
 
 #### To run this project you'll need to type some comand lines at the terminal as the folowing instructions:
 
 ```
-// clone the project and move to its folder
+1 - clone the project and move to its folder
 
 git clone https://github.com/vimigueloli/react-invoicing.git
 cd react-invoicing
 
-// instal the dependencies and run the build
+
+2 - instal the dependencies and run the build
 
 yarn
 yarn build
 ```
+
+#### If you are reading the code of this project in Visual Code Studio It's recomended to install the "Better Comments" extension.
