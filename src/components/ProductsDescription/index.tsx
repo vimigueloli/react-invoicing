@@ -123,7 +123,7 @@ export default function ProductsDescription({
                             <G.Line justify="start">
                                 <S.NumberInput
                                     width="60px"
-                                    decimalSeparator="."
+                                    decimalSeparator="." groupSeparator=","
                                     defaultValue={0}
                                     value={item.discount}
                                     onValueChange={(value, name) =>
@@ -147,7 +147,7 @@ export default function ProductsDescription({
                             <S.NumberInput
                                 width="80px"
                                 value={item.qty}
-                                decimalSeparator="."
+                                decimalSeparator="." groupSeparator=","
                                 defaultValue={0}
                                 onValueChange={(value, name) =>
                                     setItems(
@@ -168,7 +168,7 @@ export default function ProductsDescription({
                                 width="80px"
                                 value={item.cost}
                                 defaultValue={0}
-                                decimalSeparator="."
+                                decimalSeparator="." groupSeparator=","
                                 onValueChange={(value, name) =>
                                     setItems(
                                         items.map((i) =>
@@ -258,7 +258,7 @@ export default function ProductsDescription({
                                 defaultValue={0}
                                 width="40px"
                                 value={tax}
-                                decimalSeparator="."
+                                decimalSeparator="." groupSeparator=","
                                 decimalsLimit={2}
                                 onValueChange={(value, name) =>
                                     setTax(value ? value : 0)
