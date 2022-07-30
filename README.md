@@ -6,13 +6,11 @@
 
 #### The project is a simple invoice generator, besides the news tecnoligies this remake also includes a new percentage discout feature, and input masks to avoid errors. You can test the build of this project at this link:</br>https://react-invoicing.vercel.app/</br>
 
-# Project's main dependencies
+# How to run the project
 
 ![GitHub](https://img.shields.io/badge/Dependencies-React-4e8dec?style=plastic)
 ![GitHub](https://img.shields.io/badge/-seact_currency_input_field-4e8dec?style=plastic)
 ![GitHub](https://img.shields.io/badge/-styled_components-4e8dec?style=plastic)
-
-<br/>
 
 #### To run this project you'll need to type some comand lines at the terminal as the folowing instructions:
 
@@ -29,4 +27,4 @@ yarn
 yarn build
 ```
 
-#### If you are reading the code of this project in Visual Code Studio It's recomended to install the "Better Comments" extension.
+##### If you are reading the code of this project in Visual Code Studio It's recomended to install the "Better Comments" extension.
